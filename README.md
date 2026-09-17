@@ -81,6 +81,22 @@ Many developers assume token reduction means losing information. **DeltaCode doe
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
+#### The Formal AST Preservation Invariant:
+In Go's formal grammar (`go/ast`), any source file is partitioned into general declarations (`GenDecl`: imports, structs, types, interfaces, constants, vars) and function declarations (`FuncDecl`):
+$$\forall d \in \text{Decls}: d \text{ is } \text{GenDecl} \implies \text{Node}_{\text{sliced}}(d) \equiv \text{Node}_{\text{original}}(d) \quad (\text{Identity Mapping})$$
+
+DeltaCode leaves every `GenDecl` AST node **untouched**. The LLM receives the exact byte-for-byte type definitions and interface boundaries. Only non-target function bodies are folded into single-line anchors:
+$$\forall f \in \text{Decls}: f \text{ is } \text{FuncDecl} \land f \neq \text{Target} \implies f.\text{Type}_{\text{sliced}} \equiv f.\text{Type}_{\text{original}} \land f.\text{Body}_{\text{sliced}} = \{\text{anchor}\}$$
+
+#### Automated Verification Receipt:
+Every build executes a bit-for-bit AST equivalence assertion over both general declarations and function signatures:
+```text
+=== RUN   TestProofBitForBitPreservation
+    VERIFIED: 100% of GenDecls (Imports, Types, Structs, Interfaces) and Function Signatures are bit-for-bit preserved!
+--- PASS: TestProofBitForBitPreservation (0.00s)
+PASS
+```
+
 ---
 
 ## 🚀 Quick Start
