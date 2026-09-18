@@ -50,10 +50,25 @@ Frozen intent-to-symbol benchmark suite comparing **DeltaCode** against **vector
 
 | Retrieval System | Recall @ 1 | Recall @ 5 | Exact Symbol @ 5 | P95 Latency | Model & DB Footprint |
 | :--- | :---: | :---: | :---: | :---: | :---: |
-| **DeltaCode Structural Ranker** | **72.0%** | **92.0%** | **80.0%** | **169 ms** | **0 MB (Pure Go Standard Lib)** |
+| **DeltaCode Structural Ranker (`deltacode grep`)** | **72.0%** | **92.0%** | **80.0%** | **169 ms** | **0 MB (Pure Go Standard Lib)** |
 | `zvec-grep` + Jina (Vector DB) | 8.0% | 48.0% | 0.0% | 401 ms | 2.4 GB PyTorch weights |
 | `zvec-grep` + Potion (Vector DB) | 8.0% | 40.0% | 16.0% | 687 ms | C++ RocksDB lock contention |
 | Standard `grep` / `ripgrep` | < 10% | < 30% | N/A | 10 ms | Zero AST awareness (Full dump) |
+
+#### Live Head-to-Head: `deltacode grep` vs `ripgrep` on Official Kubernetes (`pkg/` Core)
+Measured directly on Kubernetes source (`github.com/kubernetes/kubernetes`) across 3,585 files / ~2.5M lines of code:
+
+| Natural Developer Intent | System | Results Returned | Latency | Tokens Emitted | Top Result Quality |
+| :--- | :--- | :---: | :---: | :---: | :--- |
+| **"jwt token generator signing"** | `ripgrep` (`rg -n JWTTokenGenerator`) | 9 raw text lines | 125 ms | 332 tok | Unranked string occurrences |
+| | **`deltacode grep` (scoped package)** | **Top-5 AST Symbols** | **37 ms** | **336 tok** | **Rank #1: `jwtTokenGenerator.GenerateToken`** |
+| | **`deltacode grep` (entire 3.5k files)** | **Top-5 AST Symbols** | 2,934 ms | **336 tok** | **Rank #1: `jwtTokenGenerator.GenerateToken`** |
+| **"priority queue scheduler init"** | `ripgrep` (`rg -n NewPriorityQueue`) | 9 raw text lines | 92 ms | 353 tok | Dump of callsites across repo |
+| | **`deltacode grep`** | **Top-5 AST Symbols** | 3,129 ms | **380 tok** | **Rank #1: `NewPriorityQueue` (`line 422`)** |
+| **"replicaset controller sync"** | `ripgrep` (`rg -n NewReplicaSetController`) | 30 raw text lines | 139 ms | 1,336 tok | High-noise dump of callers & comments |
+| | **`deltacode grep`** | **Top-5 AST Symbols** | 2,934 ms | **344 tok** | **Rank #1: `getAllReplicaSetsAndSyncRevision`** |
+
+> **Why Agents Need Structural Grep:** Traditional `ripgrep` requires knowing the exact symbol name beforehand and dumps noisy, unstructured line snippets that pollute LLM context windows. `deltacode grep` understands Go AST structure, mapping natural-language intent directly to ranked function and method declarations with zero embedding infrastructure.
 
 ---
 
