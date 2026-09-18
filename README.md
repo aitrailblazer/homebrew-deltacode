@@ -12,8 +12,9 @@ Official Homebrew tap for **DeltaCode**: The sub-millisecond AST context slicing
 ## ⚡ Quick Install
 
 ```bash
-# 1. Add the official tap
+# 1. Add the official tap & trust formula
 brew tap aitrailblazer/deltacode
+brew trust aitrailblazer/deltacode
 
 # 2. Install DeltaCode static binary
 brew install deltacode
@@ -21,7 +22,7 @@ brew install deltacode
 
 Verify your installation:
 ```bash
-deltacode --version
+deltacode version
 ```
 
 ---
