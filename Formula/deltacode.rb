@@ -7,7 +7,7 @@ class Deltacode < Formula
   on_macos do
     if Hardware::CPU.arm?
       url "https://github.com/aitrailblazer/homebrew-deltacode/releases/download/v1.0.0/deltacode_darwin_arm64.tar.gz"
-      sha256 "02780d24812aad2ceed02db05f4d7be37a7b294382d6e13a2a5050bf8f746b29"
+      sha256 "932cbdf265ab8549c0a7d8e8a4be5b4ff3bf99e077cb0b8ce27d1f082fb3a4e4"
     else
       url "https://github.com/aitrailblazer/homebrew-deltacode/releases/download/v1.0.0/deltacode_darwin_amd64.tar.gz"
       sha256 "0000000000000000000000000000000000000000000000000000000000000000"
