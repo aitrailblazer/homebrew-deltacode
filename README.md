@@ -17,9 +17,11 @@ brew test deltacode
 The formula selects macOS or Linux archives for ARM64 or AMD64.
 Homebrew verifies the archive SHA-256 before installation.
 
-**Release status:** the verified macOS ARM64 v1.0.2 archive reports `1.0.0`. The formula's
-exact-version test deliberately rejects that mismatch. Do not bypass the test or
-assume the installed archive contains current source changes.
+**Current release: v1.1.0.** The executable must report `1.1.0`; the formula
+checks that exact version. Existing users can run `brew update` followed by
+`brew upgrade aitrailblazer/deltacode/deltacode`.
+Historical v1.0.2 archives report `1.0.0` and do not contain these fixes.
+Those archives remain unchanged; do not bypass version checks or relabel them.
 
 Without Homebrew, obtain the matching archive and `.sha256` file from the release,
 run `shasum -a 256 -c <archive>.sha256` (or `sha256sum -c` on Linux), extract it,
@@ -29,12 +31,24 @@ Checksums detect corruption; obtain them from a trusted release source.
 ## Scope
 
 - Go supports discovery, context, slicing, and function replacement.
-- Python support is experimental and slice-only; some syntax is deliberately rejected.
+- Python supports parser-backed discovery, context, slicing, and guarded
+  function/method replacement. Decorators, async functions, nested definitions,
+  classes, multiline strings and f-strings are covered. Classes are context
+  targets, not replacement targets.
+- Python features require trusted host **CPython 3.12+** as `python3` on PATH.
+  An older or missing runtime fails explicitly; Go-only features do not require
+  Python. Install a supported Python separately if needed and check `python3 --version`.
 - TypeScript, JavaScript, Rust, and Java are not supported.
 - Token savings and runtime vary with input and scope. Slices are context, not a
   substitute for compiler validation or tests.
 - The stdio MCP server includes a writing tool. Authorize its root and configure
   client approvals; do not treat it as read-only.
+
+**Compatibility:** target names are case-sensitive. MCP `apply_slice` requires
+the current `expected_source_sha256` and defaults to strict matching. Python writes
+require strict source hashes, the target's exact indentation, and valid merged
+module syntax. CLI apply previews unless `-write` is supplied. Advisory writer
+locks do not provide unconditional CAS against arbitrary external editors.
 
 ## Updating this tap
 
@@ -50,7 +64,10 @@ private source, internal release notes, or audit evidence.
 The formula now checks the exact executable version and a small Go slice instead
 of a branding substring. Documentation separates current binary availability from
 development-source features and avoids universal latency or token-saving claims.
-These repository updates do not replace the existing release archives.
+The v1.1.0 release adds case-distinct selection and replacement-comment fixes,
+neutral CLI help wording, and native packaged-binary acceptance gates on Linux
+and macOS. Only the runner-native architectures are executed by those gates;
+the other archives are cross-built. Older release archives are not replaced.
 See the [changelog](CHANGELOG.md) for the maintenance history.
 
 Licensed under [Apache-2.0](LICENSE).
