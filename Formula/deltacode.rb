@@ -1,6 +1,6 @@
 class Deltacode < Formula
-  desc "Sub-millisecond AST context slicing & token optimization engine for AI coding"
-  homepage "https://platform.aitrailblazer.com"
+  desc "Go-first structural code context and guarded function editing"
+  homepage "https://github.com/aitrailblazer/homebrew-deltacode"
   version "1.0.2"
   license "Apache-2.0"
 
@@ -29,6 +29,10 @@ class Deltacode < Formula
   end
 
   test do
-    assert_match "deltacode", shell_output("#{bin}/deltacode --version")
+    assert_equal version.to_s, shell_output("#{bin}/deltacode --version").strip
+    (testpath/"sample.go").write "package sample\nfunc Target() int { return 7 }\nfunc Other() int { return 8 }\n"
+    output = shell_output("#{bin}/deltacode slice -root #{testpath} -path sample.go -target Target")
+    assert_match "return 7", output
+    refute_match "return 8", output
   end
 end
