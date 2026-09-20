@@ -1,5 +1,16 @@
 # Changelog
 
+## [v1.2.0] — 2026-09-20
+
+- Publish new, version-injected macOS/Linux ARM64 and AMD64 binaries; retain older
+  release assets unchanged. The formula uses checksums generated from these archives.
+- Slicing without a target returns a symbols-only outline, never bodies; with a
+  target it returns exactly that one body with span and SHA-256.
+- MCP tools accept per-call subtree scoping; discover/context emit path:start-end
+  citations with zero bodies, per-call max_bytes budgets, and trajectory trails.
+- Byte/line counts stay measured per call with no fixed saving claimed;
+  estimated_tokens remains source bytes/4 labeled as an estimate.
+
 ## [v1.1.0] — 2026-09-19
 
 - Publish new, version-injected macOS/Linux ARM64 and AMD64 binaries; retain older
