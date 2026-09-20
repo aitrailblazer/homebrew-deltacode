@@ -8,17 +8,18 @@ The engine source repository is private and requires collaborator access.
 ## Install
 
 ```bash
-brew tap aitrailblazer/deltacode
-brew install deltacode
-deltacode --version
-brew test deltacode
+brew tap aitrailblazer/deltacode && brew install aitrailblazer/deltacode/deltacode && deltacode version
 ```
 
 The formula selects macOS or Linux archives for ARM64 or AMD64.
 Homebrew verifies the archive SHA-256 before installation.
 
-**Current release: v1.1.0.** The executable must report `1.1.0`; the formula
-checks that exact version. Existing users can run `brew update` followed by
+| Version | Status | Executable must report |
+|---------|--------|------------------------|
+| v1.2.0  | current | `1.2.0` |
+| v1.1.0  | superseded | `1.1.0` |
+
+Existing users can run `brew update` followed by
 `brew upgrade aitrailblazer/deltacode/deltacode`.
 Historical v1.0.2 archives report `1.0.0` and do not contain these fixes.
 Those archives remain unchanged; do not bypass version checks or relabel them.
